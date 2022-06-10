@@ -3,8 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { Container, Title, Button } from "@mantine/core";
 import styles from "../styles/Home.module.css";
-import { Navbar } from "../components/Navbar";
-import { Banner } from "../components/Banner";
+import { Navbar, Banner } from "../components";
 
 const Home: NextPage = () => {
   return (
