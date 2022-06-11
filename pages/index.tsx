@@ -4,8 +4,10 @@ import Image from "next/image";
 import { Container, Title, Button, Space, Group } from "@mantine/core";
 import styles from "../styles/Home.module.css";
 import { Navbar, Banner } from "../components";
+import { supabase } from "../utils/supabase";
 
 const Home: NextPage = () => {
+  console.log('USER OBJ HERE', supabase.auth.user())
   return (
     <Container>
       <Head>
