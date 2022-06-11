@@ -44,7 +44,7 @@ function AccordionLabel({ id, name, isOnTrack, hasFeedback }: AccordionLabelProp
         <Group noWrap position="apart">
             <Text>{name}</Text>
             <Group>
-                <ThemeIcon radius="lg" size="lg" color={showOnTrackColor(isOnTrack)}/>
+                <ThemeIcon radius="lg" size="lg" color={showOnTrackColor(isOnTrack)}>{" "}</ThemeIcon>
                 {hasFeedback ?
                     <ThemeIcon  size="lg" radius="lg" color="indigo">
                         <MessageCircle/>
