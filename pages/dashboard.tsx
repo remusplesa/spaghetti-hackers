@@ -14,13 +14,17 @@ import { FitDistanceTile } from "../components/FitDistanceTile";
 const Dashboard: NextPage = () => {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile>()
+
+  const [activities, setActivities] = useState([])
+  let lastActivity
+
   useEffect(() => {
-    (async ()=>{
+    (async () => {
       const user = supabase.auth.user();
       let { data: dbProfile, error } = await supabase
         .from('profile')
         .select("*")
-    
+
         // Filters
         .eq('id', user?.id)
 
@@ -30,20 +34,24 @@ const Dashboard: NextPage = () => {
         router.push('/create')
       }
     })()
-  }, [])
-
-  useEffect(() => {
     getLastActivity()
   }, [])
 
   const getLastActivity = async () => {
     console.log("get last activity")
-    const activities = await fetch('/api/garmin-connect')
-    const s = await activities.text()
-    console.log("🎾", JSON.parse(s))
+    const res = await fetch('/api/garmin-connect')
+    const resText = await res.text()
+    setActivities(JSON.parse(resText))
+    lastActivity = activities[activities.length - 1]
+    console.log("🎾", activities)
     return activities
+  }
 
-    // const lastActivity = activities[activities.length - 1]
+  const getActivityDistance = (activity) => {
+    if (!activity) return "0"
+    let distance = 0
+    distance = (parseInt(activity.distance) / 1000).toFixed(2)
+    return distance.toString()
   }
 
   return (
@@ -58,7 +66,7 @@ const Dashboard: NextPage = () => {
         <Navbar title={"find-a-coach 🏃‍♀️"} />
         <Space h="xl" />
 
-        <FitDistanceTile distance="30" unit="Km" />
+        <FitDistanceTile distance={getActivityDistance(lastActivity)} unit='km' />
 
       </main>
     </Container>

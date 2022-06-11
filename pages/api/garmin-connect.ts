@@ -32,10 +32,11 @@ export default async function handler(
 
 	// await getGarminActivities()
 	// console.log("returning the activites ⚠️", activities)
+	// res.status(200).json(activities)
 	res.status(200).json(dummyResponse)
 }
 
-var dummyResponse = 
+var dummyResponse = [
     {
     activityId: 8993898987,
     activityName: 'Timisoara Running',
@@ -250,3 +251,4 @@ var dummyResponse =
     decoDive: false,
     parent: false
     }
+]
