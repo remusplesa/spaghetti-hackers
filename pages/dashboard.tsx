@@ -9,6 +9,7 @@ import styles from "../styles/Home.module.css";
 import { Navbar, Banner } from "../components";
 import { supabase } from "../utils/supabase";
 import { Profile } from "../types";
+import { ClientList } from "../components";
 import { FitDistanceTile } from "../components/FitDistanceTile";
 
 const Dashboard: NextPage = () => {
@@ -66,8 +67,8 @@ const Dashboard: NextPage = () => {
         <Navbar title={"find-a-coach 🏃‍♀️"} />
         <Space h="xl" />
 
+        <ClientList></ClientList>
         <FitDistanceTile distance={getActivityDistance(lastActivity)} unit='km' />
-
       </main>
     </Container>
   );
