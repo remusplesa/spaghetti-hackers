@@ -14,24 +14,16 @@ import { FitDistanceTile } from "../components/FitDistanceTile";
 const Dashboard: NextPage = () => {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile>()
-  console.log('USER OBJ HERE', supabase.auth.user())
-
   useEffect(() => {
-    // (async () => {
-    //   const user = supabase.auth.user();
-    //   let { data: dbProfile, error } = await supabase
-    //     .from('profile')
-    //     .select("*")
-    //     // Filters
-    //     .eq('id', user?.id)
+    (async () => {
+      const user = supabase.auth.user();
+      let { data: dbProfile, error } = await supabase
+        .from('profile')
+        .select("*")
 
-    //   console.log('PROFILE?:::', dbProfile)
-    //   if (dbProfile?.length) {
-    //     setProfile(dbProfile[0]);
-    //   } else {
-    //     router.push('/create')
-    //   }
-    // })()
+        // Filters
+        .eq('id', user?.id)
+    })
 
     getLastActivity()
   }, [])
