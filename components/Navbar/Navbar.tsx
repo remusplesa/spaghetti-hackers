@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { Container, Title, Button, Group, Box } from "@mantine/core";
+import {supabase} from '../../utils/supabase'
 
 const Navbar = ({ title }: NavbarProps) => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const Navbar = ({ title }: NavbarProps) => {
           variant="outline"
           color={"red"}
           compact
-          onClick={() => router.push("/logout")}
+          onClick={() => supabase.auth.signOut()}
         >
           Log out{" "}
         </Button>

@@ -1,22 +1,19 @@
 import type { InferGetServerSidePropsType, NextPage } from "next";
 import { useRouter } from "next/router";
-import { useLocalStorage } from '@mantine/hooks';
 
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
 import { Container, Title, Button, Space, Group } from "@mantine/core";
-import styles from "../styles/Home.module.css";
 import { Navbar, Banner } from "../components";
 import { supabase } from "../utils/supabase";
-import { Profile } from "../types";
 import { ClientList } from "../components";
 import { FitDistanceTile } from "../components/FitDistanceTile";
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
-
+  const [session, setSession] = useState()
   useEffect(() => {
+    setTimeout(
     (async () => {
       const user = supabase.auth.user();
       console.log('curr user', user)
@@ -29,7 +26,7 @@ const Dashboard: NextPage = () => {
       if (!dbProfile?.length) {
         router.push("/create");
       }
-    })();
+    }), 100)
   }, []);
 
   // useEffect(() => {
@@ -63,5 +60,6 @@ const Dashboard: NextPage = () => {
     </Container>
   );
 };
+
 
 export default Dashboard;
