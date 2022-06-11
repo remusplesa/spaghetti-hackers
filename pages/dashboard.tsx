@@ -9,6 +9,7 @@ import styles from "../styles/Home.module.css";
 import { Navbar, Banner } from "../components";
 import { supabase } from "../utils/supabase";
 import { Profile } from "../types";
+import { ClientList } from "../components";
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
@@ -25,11 +26,11 @@ const Dashboard: NextPage = () => {
         .eq('id', user?.id)
 
       console.log('PROFILE?:::', dbProfile)
-      if (dbProfile?.length) {
-        setProfile(dbProfile[0]);
-      } else {
-        router.push('/create')
-      }
+      // if (dbProfile?.length) {
+      //   setProfile(dbProfile[0]);
+      // } else {
+      //   router.push('/create')
+      // }
     })()
   }, [])
   return (
@@ -43,7 +44,7 @@ const Dashboard: NextPage = () => {
       <main>
         <Navbar title={"find-a-coach 🏃‍♀️"} />
         <Space h="xl" />
-        
+        <ClientList></ClientList>
       </main>
     </Container>
   );
