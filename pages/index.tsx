@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { Container, Title, Button } from "@mantine/core";
+import { Container, Title, Button, Space, Group } from "@mantine/core";
 import styles from "../styles/Home.module.css";
 import { Navbar, Banner } from "../components";
 
@@ -15,11 +15,21 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <Navbar title={"hello there"} />
+        <Navbar title={"find-a-coach 🏃‍♀️"} />
+        <Space h="xl" />
         <Banner
-          imageSrc="https://images.unsplash.com/photo-1486218119243-13883505764c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2072&q=80"
+          imageSrc="https://images.unsplash.com/photo-1530143311094-34d807799e8f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&q=90"
           title="Hello banner"
+          text={
+            "Excepteur eiusmod cupidatat ea cupidatat do do. Commodo minim exercitation cillum occaecat esse est non velit officia cupidatat proident quis dolore sit. Elit sunt voluptate ipsum do ex labore labore esse adipisicing. Ex mollit dolore ex consequat amet labore dolore enim nostrud. Officia irure do officia anim adipisicing laboris ut minim mollit laborum culpa. Quis nostrud id officia id ipsum quis velit eiusmod veniam magna incididunt."
+          }
+          cta={{ text: "Let's go!", url: "/home" }}
         />
+        <Group py={16}>
+          {" "}
+          <Button>Signup</Button>
+          <Button>Register as a coach</Button>
+        </Group>
       </main>
     </Container>
   );
