@@ -26,11 +26,11 @@ const Dashboard: NextPage = () => {
         .eq('id', user?.id)
 
       console.log('PROFILE?:::', dbProfile)
-      // if (dbProfile?.length) {
-      //   setProfile(dbProfile[0]);
-      // } else {
-      //   router.push('/create')
-      // }
+      if (dbProfile?.length) {
+        setProfile(dbProfile[0]);
+      } else {
+        router.push('/create')
+      }
     })()
   }, [])
   return (
