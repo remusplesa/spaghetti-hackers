@@ -1,42 +1,39 @@
-import type { NextPage } from "next";
-import { useRouter } from 'next/router'
+import type { InferGetServerSidePropsType, NextPage } from "next";
+import { useRouter } from "next/router";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
 import { Container, Title, Button, Space, Group } from "@mantine/core";
-import styles from "../styles/Home.module.css";
 import { Navbar, Banner } from "../components";
 import { supabase } from "../utils/supabase";
-import { Profile } from "../types";
 import { ClientList } from "../components";
 import { FitDistanceTile } from "../components/FitDistanceTile";
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
-  const [profile, setProfile] = useState<Profile>()
   const [activities, setActivities] = useState([])
   const [runnerPackage, setRunnerPackage] = useState({})
+  const [session, setSession] = useState()
   let lastActivity
 
   useEffect(() => {
-    (async () => {
-      const user = supabase.auth.user();
-      let { data: dbProfile, error } = await supabase
-        .from('profile')
-        .select("*")
+    setTimeout(
+      (async () => {
+        const user = supabase.auth.user();
+        console.log('curr user', user)
+        let { data: dbProfile, error } = await supabase
+          .from("profile")
+          .select("*")
+          .eq("id", user?.id);
+        console.log("👀", dbProfile);
 
-        // Filters
-        .eq('id', user?.id)
+        if (!dbProfile?.length) {
+          router.push("/create");
+        }
+      }), 100)
+    //   getLastActivity();
+  }, []);
 
-      if (dbProfile?.length) {
-        setProfile(dbProfile[0]);
-      } else {
-        router.push('/create')
-      }
-    })()
-    getLastActivity()
-  }, [])
 
   const verifyExistingPackage = async () => {
     const user = supabase.auth.user();
@@ -84,5 +81,6 @@ const Dashboard: NextPage = () => {
     </Container>
   );
 };
+
 
 export default Dashboard;
