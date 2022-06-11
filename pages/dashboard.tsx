@@ -15,8 +15,8 @@ import { FitDistanceTile } from "../components/FitDistanceTile";
 const Dashboard: NextPage = () => {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile>()
-
   const [activities, setActivities] = useState([])
+  const [runnerPackage, setRunnerPackage] = useState({})
   let lastActivity
 
   useEffect(() => {
@@ -37,6 +37,17 @@ const Dashboard: NextPage = () => {
     })()
     getLastActivity()
   }, [])
+
+  const verifyExistingPackage = async () => {
+    const user = supabase.auth.user();
+    let { data: dbPackage, error } = await supabase
+      .from('runner_package')
+      .select('*')
+      .eq('runner_id', user)
+    setRunnerPackage(dbPackage || {})
+  }
+
+
 
   const getLastActivity = async () => {
     console.log("get last activity")
