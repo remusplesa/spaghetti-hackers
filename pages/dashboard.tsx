@@ -15,16 +15,24 @@ const Dashboard: NextPage = () => {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile>()
   useEffect(() => {
-    (async () => {
+    (async ()=>{
       const user = supabase.auth.user();
       let { data: dbProfile, error } = await supabase
         .from('profile')
         .select("*")
-
+    
         // Filters
         .eq('id', user?.id)
-    })
 
+      if (dbProfile?.length) {
+        setProfile(dbProfile[0]);
+      } else {
+        router.push('/create')
+      }
+    })()
+  }, [])
+
+  useEffect(() => {
     getLastActivity()
   }, [])
 
