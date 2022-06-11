@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Container, Title, Text, Space, Button, Group } from "@mantine/core";
 
-const Banner = ({ imageSrc, title, text, cta }: BannerProps) => {
+const Banner = ({ height, imageSrc, title, text, cta }: BannerProps) => {
   const router = useRouter();
 
   return (
@@ -11,7 +11,7 @@ const Banner = ({ imageSrc, title, text, cta }: BannerProps) => {
       style={{
         backgroundImage: `url(${imageSrc})`,
         backgroundPosition: "center",
-        minHeight: 300,
+        minHeight: height || 300,
       }}
     >
       <Title align="left">{title}</Title>
@@ -39,13 +39,14 @@ const Banner = ({ imageSrc, title, text, cta }: BannerProps) => {
 };
 
 type BannerProps = {
-  imageSrc: string;
+  imageSrc?: string;
   title: string;
   text?: string;
   cta?: {
     text: string;
     url: string;
   };
+  height?: number
 };
 
 export default Banner;

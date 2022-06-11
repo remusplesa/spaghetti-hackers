@@ -1,18 +1,108 @@
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { useRouter } from 'next/router'
-
-import { useEffect, useState } from 'react';
+import { useRouter } from "next/router";
 import Head from "next/head";
-import Image from "next/image";
-import { Container, Title, Button, Space, Group } from "@mantine/core";
-import styles from "../styles/Home.module.css";
+import {
+  Container,
+  Textarea,
+  Button,
+  Space,
+  Group,
+  Stepper,
+  RadioGroup,
+  Radio,
+  Center,
+  TextInput,
+  Checkbox,
+  Select,
+  Stack,
+} from "@mantine/core";
+import { DatePicker } from '@mantine/dates';
+import { useForm } from "@mantine/form";
 import { Navbar, Banner } from "../components";
 import { supabase } from "../utils/supabase";
 import { Profile } from "../types";
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
-  console.log('USER OBJ HERE', supabase.auth.user())
+  const [isCoach, setIsCoach] = useState<boolean>();
+  const [active, setActive] = useState(0);
+
+  const coachForm = useForm({
+    initialValues: {
+      username: "",
+      about: "",
+      dateOfBirth: new Date("2000-01-01T00:00:00Z").toISOString(),
+      gender: "",
+      location: "",
+      isOkRemote: false,
+      termsOfService: false,
+    },
+    validate: {
+      username: (value) => (value.length > 0 ? null : "Provide a name"),
+      termsOfService: (value) =>
+        value === true ? null : "Must accept terms of service",
+    },
+  });
+
+  const athleteForm = useForm({
+    initialValues: {
+      username: "",
+      about: "",
+      dateOfBirth: new Date("2000-01-01T00:00:00Z").toISOString(),
+      gender: "",
+      location: "",
+      isOkRemote: false,
+      termsOfService: false,
+    }
+  })
+
+  const nextStep = () =>
+    setActive((current) => (current < 2 ? current + 1 : current));
+  const prevStep = () =>
+    setActive((current) => (current > 0 ? current - 1 : current));
+
+  const handleSubmit = (values: any) => {
+    console.log(coachForm.values, coachForm.errors);
+   
+      (async () => {
+        const { data: profileData, error: profileError } = await supabase
+          .from("profile")
+          .upsert([
+            {
+              id: supabase.auth.user()?.id,
+              date_of_birth: values.dateOfBirth,
+              gender: values.gender,
+              location: values.location,
+              is_ok_remote: values.isOkRemote,
+              username: values.username,
+            },
+          ]);
+  
+        if (profileError) {
+          console.error(`SUBMIT ERROR ${profileError}`);
+          return;
+        }
+  
+        console.log("Profile Dataaa ===> ", profileData);
+        if (profileData && profileData?.length > 0) {
+          const { data: coachProfileData, error: coachProfileError } =
+            await supabase
+              .from("coach_profile")
+              .upsert([
+                { about: values.about, profile_id: profileData[0].id },
+              ]);
+  
+          if (coachProfileError) {
+            console.error(`SUBMIT ERROR ${coachProfileError}`);
+          }
+          console.log(coachProfileData);
+        }
+  
+        router.push("/dashboard");
+      })();
+    
+  };
 
   return (
     <Container>
@@ -25,7 +115,107 @@ const Dashboard: NextPage = () => {
       <main>
         <Navbar title={"find-a-coach 🏃‍♀️"} />
         <Space h="xl" />
-        <h1>Form goes here</h1>
+        <Banner title="User registration" height={100} />
+        <Stepper active={active} onStepClick={setActive} breakpoint="sm">
+          <Stepper.Step label="First step" description="Select account type">
+            <Center style={{ height: 200 }}>
+              <RadioGroup
+                orientation="vertical"
+                label="Are you an athlete or a coach?"
+                required
+                onChange={(v) => {
+                  setIsCoach(v === "true");
+                }}
+              >
+                <Radio value="false" label="Athlete" />
+                <Radio value="true" label="Coach" />
+              </RadioGroup>
+            </Center>
+          </Stepper.Step>
+          <Stepper.Step label="Second step" description="Fill in the details">
+            {isCoach ? (
+              <div>
+                <form>
+                  <Stack py={32}>
+                    <TextInput
+                      required
+                      label="Name"
+                      placeholder="John Doe"
+                      {...coachForm.getInputProps("username")}
+                    />
+
+                    <Textarea
+                      label="About myself"
+                      placeholder=""
+                      {...coachForm.getInputProps("about")}
+                    />
+                    <RadioGroup
+                      orientation="horizontal"
+                      label="Gender"
+                      {...coachForm.getInputProps("gender")}
+                    >
+                      <Radio value="male" label="Male" />
+                      <Radio value="female" label="Female" />
+                    </RadioGroup>
+                    <DatePicker placeholder="Pick date" label="Event date" {...coachForm.getInputProps("dateOfBirth")}/>
+                    <Select
+                      label="City"
+                      placeholder="Pick one"
+                      {...coachForm.getInputProps("location")}
+                      data={[
+                        { value: "Timisoara", label: "Timisoara" },
+                        { value: "Bucuresti", label: "Bucuresti" },
+                        { value: "Cluj", label: "Cluj" },
+                        { value: "Brasov", label: "Brasov" },
+                        { value: "Conatanta", label: "Conatanta" },
+                        { value: "Iasi", label: "Iasi" },
+                      ]}
+                    />
+                    <Checkbox
+                      mt="md"
+                      label="Remote availability"
+                      {...coachForm.getInputProps("isOkRemote", {
+                        type: "checkbox",
+                      })}
+                    />
+                    <Checkbox
+                      mt="md"
+                      label="I agree to sell my privacy"
+                      {...coachForm.getInputProps("termsOfService", {
+                        type: "checkbox",
+                      })}
+                    />
+                  </Stack>
+                </form>
+              </div>
+            ) : (
+              <div>Athlete form</div>
+            )}
+          </Stepper.Step>
+          <Stepper.Completed>
+            Completed, click back button to get to previous step
+          </Stepper.Completed>
+        </Stepper>
+
+        <Group position="center" pb={32}>
+          <Button variant="default" onClick={prevStep}>
+            Back
+          </Button>
+          {active === 0 && (
+            <Button onClick={nextStep} disabled={isCoach === undefined}>
+              Next step
+            </Button>
+          )}
+          {active === 1 && (
+            <Button
+              type="submit"
+              onClick={coachForm.onSubmit((values) => {handleSubmit(values)})}
+              disabled={Object.keys(coachForm.errors).length > 0}
+            >
+              Submit
+            </Button>
+          )}
+        </Group>
       </main>
     </Container>
   );

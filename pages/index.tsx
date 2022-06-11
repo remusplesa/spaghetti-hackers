@@ -7,7 +7,6 @@ import { Navbar, Banner } from "../components";
 import { supabase } from "../utils/supabase";
 
 const Home: NextPage = () => {
-  console.log('USER OBJ HERE', supabase.auth.user())
   return (
     <Container>
       <Head>

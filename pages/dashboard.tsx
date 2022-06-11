@@ -13,7 +13,6 @@ import { Profile } from "../types";
 const Dashboard: NextPage = () => {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile>()
-  console.log('USER OBJ HERE', supabase.auth.user())
   useEffect(() => {
     (async ()=>{
       const user = supabase.auth.user();
