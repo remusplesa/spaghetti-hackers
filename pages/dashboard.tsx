@@ -10,11 +10,11 @@ import { Navbar, Banner } from "../components";
 import { supabase } from "../utils/supabase";
 import { Profile } from "../types";
 import { ClientList } from "../components";
+import { FitDistanceTile } from "../components/FitDistanceTile";
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile>()
-  console.log('USER OBJ HERE', supabase.auth.user())
   useEffect(() => {
     (async ()=>{
       const user = supabase.auth.user();
@@ -25,7 +25,6 @@ const Dashboard: NextPage = () => {
         // Filters
         .eq('id', user?.id)
 
-      console.log('PROFILE?:::', dbProfile)
       if (dbProfile?.length) {
         setProfile(dbProfile[0]);
       } else {
@@ -33,6 +32,21 @@ const Dashboard: NextPage = () => {
       }
     })()
   }, [])
+
+  useEffect(() => {
+    getLastActivity()
+  }, [])
+
+  const getLastActivity = async () => {
+    console.log("get last activity")
+    const activities = await fetch('/api/garmin-connect')
+    const s = await activities.text()
+    console.log("🎾", JSON.parse(s))
+    return activities
+
+    // const lastActivity = activities[activities.length - 1]
+  }
+
   return (
     <Container>
       <Head>
@@ -45,6 +59,7 @@ const Dashboard: NextPage = () => {
         <Navbar title={"find-a-coach 🏃‍♀️"} />
         <Space h="xl" />
         <ClientList></ClientList>
+        <FitDistanceTile distance="30" unit="Km" />
       </main>
     </Container>
   );
