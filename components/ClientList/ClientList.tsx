@@ -44,16 +44,17 @@ function AccordionLabel({ id, name, isOnTrack, hasFeedback }: AccordionLabelProp
         <Group noWrap position="apart">
             <Text>{name}</Text>
             <Group>
-                <ThemeIcon radius="lg" size="lg" color={showOnTrackColor(isOnTrack)}>{" "}</ThemeIcon>
-                {hasFeedback ?
-                    <ThemeIcon  size="lg" radius="lg" color="indigo">
-                        <MessageCircle/>
-                    </ThemeIcon>
-                    : 
-                    <ThemeIcon size="lg" radius="lg" color="indigo" variant="light">
-                        <MessageCircleOff/>
-                    </ThemeIcon>
-                }
+                <ThemeIcon radius="lg" size="lg" color={showOnTrackColor(isOnTrack)}>
+                </ThemeIcon>
+                  {hasFeedback ?
+                      <ThemeIcon  size="lg" radius="lg" color="indigo">
+                          <MessageCircle/>
+                      </ThemeIcon>
+                      : 
+                      <ThemeIcon size="lg" radius="lg" color="indigo" variant="light">
+                          <MessageCircleOff/>
+                      </ThemeIcon>
+                  }
             </Group>
         </Group>
     );
@@ -67,7 +68,7 @@ function ClientList() {
     ));
   
     return (
-      <Accordion initialItem={-1} iconPosition="right">
+      <Accordion initialItem={-1} iconPosition="right" >
         {items}
       </Accordion>
     );
