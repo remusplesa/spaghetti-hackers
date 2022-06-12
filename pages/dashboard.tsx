@@ -9,11 +9,23 @@ import { supabase } from "../utils/supabase";
 import { ClientList } from "../components";
 import { FitDistanceTile } from "../components/FitDistanceTile";
 import { RunningWorkout } from "../types/Workout";
+import { PackagePicker } from "../components/PackagePicker";
+import { Package } from "../types/Package";
 
 const Dashboard: NextPage = () => {
+  const emptyPackage: Package = {
+    id: '',
+    target_distance: 0,
+    is_C25K: false,
+    price: 0,
+    is_remote: false,
+    location: '',
+    duration: 0,
+    coach_id: '',
+  }
   const router = useRouter();
   const [activities, setActivities] = useState(Array<RunningWorkout>)
-  const [runnerPackage, setRunnerPackage] = useState({})
+  const [runnerPackage, setRunnerPackage] = useState(emptyPackage)
   const [session, setSession] = useState()
   const [lastActivity, setActivity] = useState({ distance: 0, duration: 0 })
 

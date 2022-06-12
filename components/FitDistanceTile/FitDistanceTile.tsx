@@ -1,4 +1,4 @@
-import { Card, Center, Container, Group, Image, Title } from "@mantine/core";
+import { Card, Center, Container, Group, Image, Text, Title } from "@mantine/core";
 
 type TileProps = {
     distance: string;
@@ -11,7 +11,7 @@ export const FitDistanceTile = ({ distance, unit }: TileProps) => {
             <Card shadow="sm" p="lg">
                 <Card.Section>
                     <Title order={4}>Distance: </Title>
-                    <Title order={6}>{distance} {unit}</Title>
+                    <Text>{distance} {unit}</Text>
                 </Card.Section>
             </Card>
         </div>
