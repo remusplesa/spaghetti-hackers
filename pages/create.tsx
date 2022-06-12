@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import Head from "next/head";
 import {
   Container,
@@ -16,12 +16,12 @@ import {
   Checkbox,
   Select,
   Stack,
+  NumberInput,
 } from "@mantine/core";
-import { DatePicker } from '@mantine/dates';
+import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { Navbar, Banner } from "../components";
-import { supabase } from "../utils/supabase";
-import { Profile } from "../types";
+import { coachFormSubmit } from '../utils/coachFormSubmit';
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
@@ -54,55 +54,19 @@ const Dashboard: NextPage = () => {
       location: "",
       isOkRemote: false,
       termsOfService: false,
-    }
-  })
+      height: 172,
+      weight: 81,
+      experience: "",
+      targetDistance: 0,
+      daysAvailable: 0,
+      raceDate: new Date("2000-01-01T00:00:00Z").toISOString()
+    },
+  });
 
   const nextStep = () =>
     setActive((current) => (current < 2 ? current + 1 : current));
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
-
-  const handleSubmit = (values: any) => {
-    console.log(coachForm.values, coachForm.errors);
-   
-      (async () => {
-        const { data: profileData, error: profileError } = await supabase
-          .from("profile")
-          .upsert([
-            {
-              id: supabase.auth.user()?.id,
-              date_of_birth: values.dateOfBirth,
-              gender: values.gender,
-              location: values.location,
-              is_ok_remote: values.isOkRemote,
-              username: values.username,
-            },
-          ]);
-  
-        if (profileError) {
-          console.error(`SUBMIT ERROR ${profileError}`);
-          return;
-        }
-  
-        console.log("Profile Dataaa ===> ", profileData);
-        if (profileData && profileData?.length > 0) {
-          const { data: coachProfileData, error: coachProfileError } =
-            await supabase
-              .from("coach_profile")
-              .upsert([
-                { about: values.about, profile_id: profileData[0].id },
-              ]);
-  
-          if (coachProfileError) {
-            console.error(`SUBMIT ERROR ${coachProfileError}`);
-          }
-          console.log(coachProfileData);
-        }
-  
-        router.push("/dashboard");
-      })();
-    
-  };
 
   return (
     <Container>
@@ -157,7 +121,12 @@ const Dashboard: NextPage = () => {
                       <Radio value="male" label="Male" />
                       <Radio value="female" label="Female" />
                     </RadioGroup>
-                    <DatePicker placeholder="Pick date" label="Event date" {...coachForm.getInputProps("dateOfBirth")}/>
+                    <DatePicker
+                      placeholder="Pick date"
+                      label="Date of birth"
+                      maxDate={new Date('2005-12-31')}
+                      {...coachForm.getInputProps("dateOfBirth")}
+                    />
                     <Select
                       label="City"
                       placeholder="Pick one"
@@ -189,7 +158,103 @@ const Dashboard: NextPage = () => {
                 </form>
               </div>
             ) : (
-              <div>Athlete form</div>
+              <div>
+              <form>
+                <Stack py={32}>
+                  <TextInput
+                    required
+                    label="Name"
+                    placeholder="John Doe"
+                    {...athleteForm.getInputProps("username")}
+                  />
+                   <Textarea
+                    label="Sports Experience"
+                    placeholder="Running since childhood..."
+                    {...athleteForm.getInputProps("experience")}
+                  />
+                  <RadioGroup
+                    orientation="horizontal"
+                    label="Gender"
+                    {...athleteForm.getInputProps("gender")}
+                  >
+                    <Radio value="male" label="Male" />
+                    <Radio value="female" label="Female" />
+                  </RadioGroup>
+                  <DatePicker
+                    placeholder="Pick date"
+                    label="Date of birth"
+                    maxDate={new Date('2005-12-31')}
+                    {...athleteForm.getInputProps("dateOfBirth")}
+                  />
+                  <Group>
+                     <NumberInput
+                    defaultValue={171}
+                    placeholder="Your height"
+                    label="Your height"
+                    required
+                    {...athleteForm.getInputProps("height")}
+                  />
+                   <NumberInput
+                    defaultValue={82}
+                    placeholder="Your weight"
+                    label="Your weight"
+                    required
+                    {...athleteForm.getInputProps("weight")}
+                  />
+                  </Group>
+
+                  <Group>
+                  <NumberInput
+                    defaultValue={171}
+                    placeholder="42 km"
+                    label="Target distance"
+                    required
+                    {...athleteForm.getInputProps("targetDistance")}
+                  />
+                   <NumberInput
+                    defaultValue={82}
+                    placeholder="Available days"
+                    label="Available days per week"
+                    required
+                    {...athleteForm.getInputProps("daysAvailable")}
+                  />
+                  </Group>
+                  <DatePicker
+                    placeholder="Goals deadline"
+                    label="Goals deadline"
+                    {...athleteForm.getInputProps("raceDate")}
+                  />
+                  
+                  <Select
+                    label="City"
+                    placeholder="Pick one"
+                    {...athleteForm.getInputProps("location")}
+                    data={[
+                      { value: "Timisoara", label: "Timisoara" },
+                      { value: "Bucuresti", label: "Bucuresti" },
+                      { value: "Cluj", label: "Cluj" },
+                      { value: "Brasov", label: "Brasov" },
+                      { value: "Conatanta", label: "Conatanta" },
+                      { value: "Iasi", label: "Iasi" },
+                    ]}
+                  />
+                  <Checkbox
+                    mt="md"
+                    label="Remote availability"
+                    {...athleteForm.getInputProps("isOkRemote", {
+                      type: "checkbox",
+                    })}
+                  />
+                  <Checkbox
+                    mt="md"
+                    label="I agree to sell my privacy"
+                    {...athleteForm.getInputProps("termsOfService", {
+                      type: "checkbox",
+                    })}
+                  />
+                </Stack>
+              </form>
+            </div>
             )}
           </Stepper.Step>
           <Stepper.Completed>
@@ -209,7 +274,9 @@ const Dashboard: NextPage = () => {
           {active === 1 && (
             <Button
               type="submit"
-              onClick={coachForm.onSubmit((values) => {handleSubmit(values)})}
+              onClick={coachForm.onSubmit((values) => {
+                coachFormSubmit(values, router);
+              })}
               disabled={Object.keys(coachForm.errors).length > 0}
             >
               Submit
