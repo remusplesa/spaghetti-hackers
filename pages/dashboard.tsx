@@ -35,7 +35,7 @@ const Dashboard: NextPage = () => {
           router.push("/create");
         }
         setUser({...user, ...dbProfile![0]})
-      }), 100)
+      }), 250)
     getLastActivity();
   }, []);
 
