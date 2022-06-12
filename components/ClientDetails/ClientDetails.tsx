@@ -131,7 +131,7 @@ const ClientDetails = () => {
                 </Group>
 
                 <Text style={{fontSize: 15}}>
-                    "{runnerDetails.feedback}"
+                    &quot;{runnerDetails.feedback}&quot;
                 </Text>
             </Card>
         </div>
