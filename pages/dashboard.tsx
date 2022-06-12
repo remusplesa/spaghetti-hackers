@@ -14,7 +14,7 @@ const Dashboard: NextPage = () => {
   const [activities, setActivities] = useState([])
   const [runnerPackage, setRunnerPackage] = useState({})
   const [session, setSession] = useState()
-  let lastActivity
+  const [lastActivity, setActivity] = useState()
 
   useEffect(() => {
     setTimeout(
@@ -31,7 +31,7 @@ const Dashboard: NextPage = () => {
           router.push("/create");
         }
       }), 100)
-    //   getLastActivity();
+    getLastActivity();
   }, []);
 
 
@@ -50,8 +50,10 @@ const Dashboard: NextPage = () => {
     console.log("get last activity")
     const res = await fetch('/api/garmin-connect')
     const resText = await res.text()
-    setActivities(JSON.parse(resText))
-    lastActivity = activities[activities.length - 1]
+    const arrWorkouts = JSON.parse(resText);
+    console.log("🅿️", arrWorkouts)
+    // setActivities(arrWorkouts)
+    setActivity(arrWorkouts[arrWorkouts.length - 1])
     console.log("🎾", activities)
     return activities
   }
