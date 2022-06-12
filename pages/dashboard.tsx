@@ -8,13 +8,14 @@ import { Navbar, Banner } from "../components";
 import { supabase } from "../utils/supabase";
 import { ClientList } from "../components";
 import { FitDistanceTile } from "../components/FitDistanceTile";
+import { RunningWorkout } from "../types/Workout";
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
-  const [activities, setActivities] = useState([])
+  const [activities, setActivities] = useState(Array<RunningWorkout>)
   const [runnerPackage, setRunnerPackage] = useState({})
   const [session, setSession] = useState()
-  const [lastActivity, setActivity] = useState()
+  const [lastActivity, setActivity] = useState({ distance: 0, duration: 0 })
 
   useEffect(() => {
     setTimeout(
@@ -58,10 +59,10 @@ const Dashboard: NextPage = () => {
     return activities
   }
 
-  const getActivityDistance = (activity) => {
+  const getActivityDistance = (activity: RunningWorkout) => {
     if (!activity) return "0"
     let distance = 0
-    distance = (parseInt(activity.distance) / 1000).toFixed(2)
+    distance = parseInt((activity.distance / 1000).toFixed(2))
     return distance.toString()
   }
 
