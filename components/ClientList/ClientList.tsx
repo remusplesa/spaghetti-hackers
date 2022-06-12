@@ -50,7 +50,7 @@ function AccordionLabel({ id, name, isOnTrack, hasFeedback }: AccordionLabelProp
                       <ThemeIcon  size="lg" radius="lg" color="indigo">
                           <MessageCircle/>
                       </ThemeIcon>
-                      :
+                      : 
                       <ThemeIcon size="lg" radius="lg" color="indigo" variant="light">
                           <MessageCircleOff/>
                       </ThemeIcon>
@@ -62,11 +62,11 @@ function AccordionLabel({ id, name, isOnTrack, hasFeedback }: AccordionLabelProp
 
 function ClientList() {
     const items = clientList.map((client) => (
-      <Accordion.Item label={<AccordionLabel {...client} />} key={client.id} color="cyan">
+      <Accordion.Item label={<AccordionLabel {...client} />} key={client.id}>
         <ClientDetails/>
       </Accordion.Item>
     ));
-
+  
     return (
       <Accordion initialItem={-1} iconPosition="right" >
         {items}
