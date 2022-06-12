@@ -1,51 +1,47 @@
-import type { NextPage } from "next";
-import { useRouter } from 'next/router'
+import type { InferGetServerSidePropsType, NextPage } from "next";
+import { useRouter } from "next/router";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
 import { Container, Title, Button, Space, Group } from "@mantine/core";
-import styles from "../styles/Home.module.css";
 import { Navbar, Banner } from "../components";
 import { supabase } from "../utils/supabase";
-import { Profile } from "../types";
 import { ClientList } from "../components";
 import { FitDistanceTile } from "../components/FitDistanceTile";
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
-  const [profile, setProfile] = useState<Profile>()
+  const [session, setSession] = useState()
   useEffect(() => {
-    (async ()=>{
+    setTimeout(
+    (async () => {
       const user = supabase.auth.user();
+      console.log('curr user', user)
       let { data: dbProfile, error } = await supabase
-        .from('profile')
+        .from("profile")
         .select("*")
-    
-        // Filters
-        .eq('id', user?.id)
+        .eq("id", user?.id);
+      console.log("👀", dbProfile);
 
-      if (dbProfile?.length) {
-        setProfile(dbProfile[0]);
-      } else {
-        router.push('/create')
+      if (!dbProfile?.length) {
+        router.push("/create");
       }
-    })()
-  }, [])
+    }), 100)
+  }, []);
 
-  useEffect(() => {
-    getLastActivity()
-  }, [])
+  // useEffect(() => {
+  //   getLastActivity();
+  // }, []);
 
   const getLastActivity = async () => {
-    console.log("get last activity")
-    const activities = await fetch('/api/garmin-connect')
-    const s = await activities.text()
-    console.log("🎾", JSON.parse(s))
-    return activities
+    console.log("get last activity");
+    const activities = await fetch("/api/garmin-connect");
+    const s = await activities.text();
+    console.log("🎾", JSON.parse(s));
+    return activities;
 
     // const lastActivity = activities[activities.length - 1]
-  }
+  };
 
   return (
     <Container>
@@ -64,5 +60,6 @@ const Dashboard: NextPage = () => {
     </Container>
   );
 };
+
 
 export default Dashboard;
