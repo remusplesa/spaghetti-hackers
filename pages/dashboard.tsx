@@ -8,40 +8,63 @@ import { Navbar, Banner } from "../components";
 import { supabase } from "../utils/supabase";
 import { ClientList } from "../components";
 import { FitDistanceTile } from "../components/FitDistanceTile";
+import { RunningWorkout } from "../types/Workout";
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
+  const [activities, setActivities] = useState(Array<RunningWorkout>)
+  const [runnerPackage, setRunnerPackage] = useState({})
   const [session, setSession] = useState()
+  const [lastActivity, setActivity] = useState({ distance: 0, duration: 0 })
+
   useEffect(() => {
     setTimeout(
-    (async () => {
-      const user = supabase.auth.user();
-      console.log('curr user', user)
-      let { data: dbProfile, error } = await supabase
-        .from("profile")
-        .select("*")
-        .eq("id", user?.id);
-      console.log("👀", dbProfile);
+      (async () => {
+        const user = supabase.auth.user();
+        console.log('curr user', user)
+        let { data: dbProfile, error } = await supabase
+          .from("profile")
+          .select("*")
+          .eq("id", user?.id);
+        console.log("👀", dbProfile);
 
-      if (!dbProfile?.length) {
-        router.push("/create");
-      }
-    }), 100)
+        if (!dbProfile?.length) {
+          router.push("/create");
+        }
+      }), 100)
+    getLastActivity();
   }, []);
 
-  // useEffect(() => {
-  //   getLastActivity();
-  // }, []);
+
+  const verifyExistingPackage = async () => {
+    const user = supabase.auth.user();
+    let { data: dbPackage, error } = await supabase
+      .from('runner_package')
+      .select('*')
+      .eq('runner_id', user)
+    setRunnerPackage(dbPackage || {})
+  }
+
+
 
   const getLastActivity = async () => {
-    console.log("get last activity");
-    const activities = await fetch("/api/garmin-connect");
-    const s = await activities.text();
-    console.log("🎾", JSON.parse(s));
-    return activities;
+    console.log("get last activity")
+    const res = await fetch('/api/garmin-connect')
+    const resText = await res.text()
+    const arrWorkouts = JSON.parse(resText);
+    console.log("🅿️", arrWorkouts)
+    // setActivities(arrWorkouts)
+    setActivity(arrWorkouts[arrWorkouts.length - 1])
+    console.log("🎾", activities)
+    return activities
+  }
 
-    // const lastActivity = activities[activities.length - 1]
-  };
+  const getActivityDistance = (activity: RunningWorkout) => {
+    if (!activity) return "0"
+    let distance = 0
+    distance = parseInt((activity.distance / 1000).toFixed(2))
+    return distance.toString()
+  }
 
   return (
     <Container>
@@ -54,8 +77,9 @@ const Dashboard: NextPage = () => {
       <main>
         <Navbar title={"find-a-coach 🏃‍♀️"} />
         <Space h="xl" />
+
         <ClientList></ClientList>
-        <FitDistanceTile distance="30" unit="Km" />
+        <FitDistanceTile distance={getActivityDistance(lastActivity)} unit='km' />
       </main>
     </Container>
   );
