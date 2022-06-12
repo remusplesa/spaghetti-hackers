@@ -10,31 +10,43 @@ import { ClientList } from "../components";
 import { FitDistanceTile } from "../components/FitDistanceTile";
 import { useUser } from '../hooks/useUser';
 import { RunningWorkout } from "../types/Workout";
+import { PackagePicker } from "../components/PackagePicker";
+import { Package } from "../types/Package";
 
 const Dashboard: NextPage = () => {
+  const emptyPackage: Package = {
+    id: '',
+    target_distance: 0,
+    is_C25K: false,
+    price: 0,
+    is_remote: false,
+    location: '',
+    duration: 0,
+    coach_id: '',
+  }
   const router = useRouter();
   const [setUser] = useUser((state: { setUser: any; }) => [state.setUser]);
   const [activities, setActivities] = useState(Array<RunningWorkout>)
-  const [runnerPackage, setRunnerPackage] = useState({})
+  const [runnerPackage, setRunnerPackage] = useState(emptyPackage)
   const [session, setSession] = useState()
   const [lastActivity, setActivity] = useState({ distance: 0, duration: 0 })
 
 
   useEffect(() => {
     setTimeout(
-    (async () => {
-      const user = supabase.auth.user();
-      setUser(user)
-      let { data: dbProfile, error } = await supabase
-        .from("profile")
-        .select("*")
-        .eq("id", user?.id);
-      console.log("👀", dbProfile);
-    
+      (async () => {
+        const user = supabase.auth.user();
+        setUser(user)
+        let { data: dbProfile, error } = await supabase
+          .from("profile")
+          .select("*")
+          .eq("id", user?.id);
+        console.log("👀", dbProfile);
+
         if (!dbProfile?.length) {
           router.push("/create");
         }
-        setUser({...user, ...dbProfile![0]})
+        setUser({ ...user, ...dbProfile![0] })
       }), 250)
     getLastActivity();
   }, []);
@@ -46,7 +58,7 @@ const Dashboard: NextPage = () => {
       .from('runner_package')
       .select('*')
       .eq('runner_id', user)
-    setRunnerPackage(dbPackage || {})
+    // setRunnerPackage(dbPackage || {})
   }
 
 
