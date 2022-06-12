@@ -8,14 +8,16 @@ import { Navbar, Banner } from "../components";
 import { supabase } from "../utils/supabase";
 import { ClientList } from "../components";
 import { FitDistanceTile } from "../components/FitDistanceTile";
-
+import { useUser } from '../hooks/useUser';
 const Dashboard: NextPage = () => {
   const router = useRouter();
-  const [session, setSession] = useState()
+  const [setUser] = useUser((state) => [state.setUser]);
+
   useEffect(() => {
     setTimeout(
     (async () => {
       const user = supabase.auth.user();
+      setUser(user)
       console.log('curr user', user)
       let { data: dbProfile, error } = await supabase
         .from("profile")
