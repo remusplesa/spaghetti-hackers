@@ -34,19 +34,19 @@ const Dashboard: NextPage = () => {
 
   useEffect(() => {
     setTimeout(
-    (async () => {
-      const user = supabase.auth.user();
-      setUser(user)
-      let { data: dbProfile, error } = await supabase
-        .from("profile")
-        .select("*")
-        .eq("id", user?.id);
-      console.log("👀", dbProfile);
-    
+      (async () => {
+        const user = supabase.auth.user();
+        setUser(user)
+        let { data: dbProfile, error } = await supabase
+          .from("profile")
+          .select("*")
+          .eq("id", user?.id);
+        console.log("👀", dbProfile);
+
         if (!dbProfile?.length) {
           router.push("/create");
         }
-        setUser({...user, ...dbProfile![0]})
+        setUser({ ...user, ...dbProfile![0] })
       }), 250)
     getLastActivity();
   }, []);
@@ -58,7 +58,7 @@ const Dashboard: NextPage = () => {
       .from('runner_package')
       .select('*')
       .eq('runner_id', user)
-    setRunnerPackage(dbPackage || {})
+    // setRunnerPackage(dbPackage || {})
   }
 
 
