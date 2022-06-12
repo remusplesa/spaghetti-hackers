@@ -1,4 +1,4 @@
-import { Card, Text, Group, RingProgress, Center, Button, Input, Textarea } from "@mantine/core";
+import { Card, Text, Group, RingProgress, Center, Button, Input, Textarea, Slider } from "@mantine/core";
 import { SetStateAction, useState } from "react";
 import ExampleChart from '../ExampleChart/ExampleChart';
 
@@ -176,7 +176,22 @@ const ClientDetails = () => {
                         <Text color="cyan" style={{ fontSize: 25, fontWeight: 100 }}>Feedback</Text>
                     </Group>
 
-                    <Textarea value={feedback} style={{ width: 860, marginBottom: 12 }} minRows={6} onChange={handleFeedbackChange} />
+                    <Textarea value={feedback} style={{ width: 860, marginBottom: 12 }} minRows={5} onChange={handleFeedbackChange} />
+                    <Group>
+                        <Text style={{ marginTop: 16 }}>Rate session</Text>
+                        <Slider style={{ width: 500, marginTop: 12 }} marks={[
+                            { value: 1, label: 1 },
+                            { value: 20, label: 2 },
+                            { value: 30, label: 3 },
+                            { value: 40, label: 4 },
+                            { value: 50, label: 5 },
+                            { value: 60, label: 6 },
+                            { value: 70, label: 7 },
+                            { value: 80, label: 8 },
+                            { value: 90, label: 9 },
+                            { value: 100, label: 10 },
+                        ]} />
+                    </Group>
                     <Group position="right">
                         <Button color="cyan" radius="md">
                             Send Feedback
