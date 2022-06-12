@@ -19,7 +19,7 @@ const Home: NextPage = () => {
         <Navbar title={"find-a-coach 🏃‍♀️"} />
         <Space h="xl" />
         <Banner
-          imageSrc="https://images.unsplash.com/photo-1530143311094-34d807799e8f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&q=90"
+          imageSrc="https://images.unsplash.com/photo-1603102859961-64b17d43580d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&q=80"
           title="Hello banner"
           text={
             "Excepteur eiusmod cupidatat ea cupidatat do do. Commodo minim exercitation cillum occaecat esse est non velit officia cupidatat proident quis dolore sit. Elit sunt voluptate ipsum do ex labore labore esse adipisicing. Ex mollit dolore ex consequat amet labore dolore enim nostrud. Officia irure do officia anim adipisicing laboris ut minim mollit laborum culpa. Quis nostrud id officia id ipsum quis velit eiusmod veniam magna incididunt."

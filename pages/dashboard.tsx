@@ -25,7 +25,6 @@ const Dashboard: NextPage = () => {
     (async () => {
       const user = supabase.auth.user();
       setUser(user)
-      console.log('curr user', user)
       let { data: dbProfile, error } = await supabase
         .from("profile")
         .select("*")
@@ -35,6 +34,7 @@ const Dashboard: NextPage = () => {
         if (!dbProfile?.length) {
           router.push("/create");
         }
+        setUser({...user, ...dbProfile![0]})
       }), 100)
     getLastActivity();
   }, []);

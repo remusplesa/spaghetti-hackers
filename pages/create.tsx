@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import Head from "next/head";
 import {
   Container,
@@ -21,8 +21,7 @@ import {
 import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { Navbar, Banner } from "../components";
-import { supabase } from "../utils/supabase";
-import { Profile } from "../types";
+import { coachFormSubmit } from '../utils/coachFormSubmit';
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
@@ -68,45 +67,6 @@ const Dashboard: NextPage = () => {
     setActive((current) => (current < 2 ? current + 1 : current));
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
-
-  const handleSubmit = (values: any) => {
-    console.log(coachForm.values, coachForm.errors);
-
-    (async () => {
-      const { data: profileData, error: profileError } = await supabase
-        .from("profile")
-        .upsert([
-          {
-            id: supabase.auth.user()?.id,
-            date_of_birth: values.dateOfBirth,
-            gender: values.gender,
-            location: values.location,
-            is_ok_remote: values.isOkRemote,
-            username: values.username,
-          },
-        ]);
-
-      if (profileError) {
-        console.error(`SUBMIT ERROR ${profileError}`);
-        return;
-      }
-
-      console.log("Profile Dataaa ===> ", profileData);
-      if (profileData && profileData?.length > 0) {
-        const { data: coachProfileData, error: coachProfileError } =
-          await supabase
-            .from("coach_profile")
-            .upsert([{ about: values.about, profile_id: profileData[0].id }]);
-
-        if (coachProfileError) {
-          console.error(`SUBMIT ERROR ${coachProfileError}`);
-        }
-        console.log(coachProfileData);
-      }
-
-      router.push("/dashboard");
-    })();
-  };
 
   return (
     <Container>
@@ -206,12 +166,6 @@ const Dashboard: NextPage = () => {
                     label="Name"
                     placeholder="John Doe"
                     {...athleteForm.getInputProps("username")}
-                  />
-
-                  <Textarea
-                    label="About myself"
-                    placeholder=""
-                    {...athleteForm.getInputProps("about")}
                   />
                    <Textarea
                     label="Sports Experience"
@@ -321,7 +275,7 @@ const Dashboard: NextPage = () => {
             <Button
               type="submit"
               onClick={coachForm.onSubmit((values) => {
-                handleSubmit(values);
+                coachFormSubmit(values, router);
               })}
               disabled={Object.keys(coachForm.errors).length > 0}
             >
