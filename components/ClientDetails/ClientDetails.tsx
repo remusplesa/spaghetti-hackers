@@ -176,6 +176,7 @@ const ClientDetails = () => {
                         <Text color="cyan" style={{ fontSize: 25, fontWeight: 100 }}>Feedback</Text>
                     </Group>
 
+
                     <Textarea value={feedback} style={{ width: 860, marginBottom: 12 }} minRows={5} onChange={handleFeedbackChange} />
                     <Group>
                         <Text style={{ marginTop: 16 }}>Rate session</Text>

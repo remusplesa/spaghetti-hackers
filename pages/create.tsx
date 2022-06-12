@@ -77,7 +77,7 @@ const Dashboard: NextPage = () => {
       </Head>
 
       <main>
-        <Navbar title={"find-a-coach 🏃‍♀️"} />
+        <Navbar  title={"myCoach 🏃‍♀️"} />
         <Space h="xl" />
         <Banner title="User registration" height={100} />
         <Stepper active={active} onStepClick={setActive} breakpoint="sm">

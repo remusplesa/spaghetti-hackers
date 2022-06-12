@@ -4,9 +4,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { Container, Title, Button, Space, Group } from "@mantine/core";
-import { Navbar, Banner } from "../components";
+import { Navbar, Banner, AthleteDashboard, ClientList } from "../components";
 import { supabase } from "../utils/supabase";
-import { ClientList } from "../components";
 import { FitDistanceTile } from "../components/FitDistanceTile";
 import { useUser } from '../hooks/useUser';
 import { RunningWorkout } from "../types/Workout";
@@ -25,7 +24,7 @@ const Dashboard: NextPage = () => {
     coach_id: '',
   }
   const router = useRouter();
-  const [setUser] = useUser((state: { setUser: any; }) => [state.setUser]);
+  const [user, setUser] = useUser((state) => [state.user, state.setUser]);
   const [activities, setActivities] = useState(Array<RunningWorkout>)
   const [runnerPackage, setRunnerPackage] = useState(emptyPackage)
   const [session, setSession] = useState()
@@ -91,10 +90,10 @@ const Dashboard: NextPage = () => {
       </Head>
 
       <main>
-        <Navbar title={"find-a-coach 🏃‍♀️"} />
+        <Navbar  title={"myCoach 🏃‍♀️"} />
         <Space h="xl" />
 
-        <ClientList></ClientList>
+        {user && user?.is_coach ? <ClientList></ClientList> : <AthleteDashboard></AthleteDashboard>}
         <FitDistanceTile distance={getActivityDistance(lastActivity)} unit='km' />
       </main>
     </Container>

@@ -40,7 +40,7 @@ const Banner = ({ height, imageSrc, title, text, cta }: BannerProps) => {
 
 type BannerProps = {
   imageSrc?: string;
-  title: string;
+  title?: string;
   text?: string;
   cta?: {
     text: string;
